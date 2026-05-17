@@ -1,8 +1,5 @@
 export default async function handler(req, res) {
-  const origin = req.headers.origin || "";
-  if (origin === "http://localhost:5173" || /\.vercel\.app$/.test(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
