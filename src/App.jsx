@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 
-const ANTHROPIC_URL = import.meta.env.VITE_ANTHROPIC_URL;
+const ANTHROPIC_URL = import.meta.env.VITE_ANTHROPIC_URL || "/api/claude";
 
 const PROSPECTS_RAW = [
   { id: "p001", company_name: "Meridian Health Systems", contact_name: "Dana Okafor", contact_title: "VP Revenue Operations", industry: "Healthcare", employees: 4200, deal_size_arr: 240000, deal_stage: "negotiation", last_contacted_days_ago: 47, score: null, score_reasoning: null, next_action: null, signals: [{ signal_type: "funding", content: "$180M Series C announced. Expanding into 3 new markets in Q3." }, { signal_type: "linkedin", content: "Dana posted: 'modernizing our sales stack — we are drowning in spreadsheets'" }, { signal_type: "hiring", content: "Actively hiring 12 SDRs. Won government contract for digital health records." }] },
