@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const ANTHROPIC_URL = import.meta.env.VITE_ANTHROPIC_URL || "/api/claude";
 
@@ -276,6 +276,10 @@ export default function App() {
   const [enrichContact, setEnrichContact] = useState("");
   const [enriching, setEnriching] = useState(false);
 
+  useEffect(() => {
+    autoScoreTop();
+  }, []);
+
   function addLog(agent, action, result) {
     setAgentLog(prev => [{ agent, action, result, time: new Date().toLocaleTimeString() }, ...prev.slice(0, 19)]);
   }
@@ -352,7 +356,7 @@ Return: {"score": <integer>, "score_reasoning": "<2-3 sentences>", "next_action"
 
   async function autoScoreTop() {
     setAutoScoring(true);
-    const top10 = [...PROSPECTS_RAW].filter(p => p.signals.length > 0).sort((a, b) => b.deal_size_arr - a.deal_size_arr).slice(0, 10);
+    const top10 = [...PROSPECTS_RAW].filter(p => p.signals.length > 0).sort((a, b) => b.deal_size_arr - a.deal_size_arr);
     for (const p of top10) await scoreOne(p);
     setAutoScoring(false);
   }
@@ -591,7 +595,7 @@ Return JSON only:
                     </div>
                     <button onClick={autoScoreTop} disabled={anyRunning}
                       style={{ padding: "8px 14px", borderRadius: "6px", background: "linear-gradient(135deg, #1d4ed8, #6366f1)", border: "none", color: "#fff", fontSize: "11px", fontWeight: "700", cursor: "pointer", fontFamily: "monospace", whiteSpace: "nowrap" }}>
-                      {autoScoring ? "SCORING..." : "AUTO-SCORE TOP 10"}
+                      {autoScoring ? "SCORING..." : "RE-SCORE ALL"}
                     </button>
                   </div>
                 )}
@@ -628,7 +632,7 @@ Return JSON only:
               <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                 <button onClick={autoScoreTop} disabled={anyRunning}
                   style={{ padding: "8px 14px", borderRadius: "6px", background: anyRunning ? "#111120" : "linear-gradient(135deg, #065f46, #22c55e)", border: "none", color: "#fff", fontSize: "11px", fontWeight: "700", cursor: anyRunning ? "not-allowed" : "pointer", fontFamily: "monospace" }}>
-                  {autoScoring ? "SCORING..." : "AUTO-SCORE TOP 10"}
+                  {autoScoring ? "SCORING..." : "RE-SCORE ALL"}
                 </button>
                 <button onClick={scoreAll} disabled={anyRunning || unscored === 0}
                   style={{ padding: "8px 14px", borderRadius: "6px", background: anyRunning || unscored === 0 ? "#111120" : "linear-gradient(135deg, #1d4ed8, #6366f1)", border: "none", color: unscored === 0 ? "#2a2a4a" : "#fff", fontSize: "11px", fontWeight: "700", cursor: anyRunning || unscored === 0 ? "not-allowed" : "pointer", fontFamily: "monospace" }}>
